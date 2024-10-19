@@ -1,7 +1,15 @@
 FROM ubuntu:latest
 
-RUN apt-get update && \
-    apt-get install -y iperf3 iproute2 tcpdump traceroute && \
-    apt-get clean
+# Install all the libraries
+RUN apt-get update && apt-get install -y \
+    iperf3 \
+    netperf \
+    nuttcp \
+    redis-tools \
+    sysbench \
+    mysql-client \
+    fio \
+    traceroute \
+    && apt-get clean
 
 CMD ["sleep", "infinity"]

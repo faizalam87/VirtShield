@@ -1,7 +1,36 @@
 FROM ubuntu:latest
 
+# Install all the relevant libraries
 RUN apt-get update && \
-    apt-get install -y iperf3 && \
+    apt-get install -y iperf3 netperf nuttcp mysql-server redis-server fio && \
     apt-get clean
 
-CMD ["iperf3", "-s"]
+# Expose all the necessary ports
+EXPOSE 5201 3306 6379 8765
+
+# Setup MySQL Server and allow requests from all IP addresses
+RUN service mysql start && \
+    mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';" && \
+    mysql -e "CREATE USER 'root'@'%' IDENTIFIED BY 'password';" && \
+    mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;" && \
+    mysql -e "FLUSH PRIVILEGES;" && \
+    sed -i "s/bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/mysql.conf.d/mysqld.cnf
+
+# Create database for mysql-benchmark
+RUN service mysql start && \
+    mysql -u root -p'password' -e "CREATE DATABASE benchmark;"
+
+    # Setup NFS for fio
+# # Create a directory to share
+# RUN mkdir -p /export/fio
+
+# # Give necessary permissions
+# RUN chown nobody:nogroup /export/fio && \
+#     chmod 777 /export/fio
+
+# # Configure the NFS exports
+# RUN echo "/export/fio *(rw,sync,no_subtree_check,no_root_squash)" >> /etc/exports && \
+#     exportfs -ra
+
+# Start all the services
+CMD ["sh", "-c", "service mysql start & service redis-server start & fio --server --port=8765 & iperf3 -s & netserver & nuttcp -S & tail -f /dev/null"]

@@ -1,21 +1,29 @@
 <br>
 
-# CSC 773 - Advance IP (Group 1)
-
-<br>
-
-## Sahil Purohit (spurohi2) <br> Faiz Alam (falam3)
-
-<br>
-
 # VirtShield: Evaluation of Firewall Performance in Virtualized and Containerized Systems
 
 ### Instruction set for setup and experimentation
 The experimental setup consists of 3 VMs or Containers each one for a server (receiver), client (traffic generator) and firewall. Experiments are performed on both VMs and docker containers and metrics like throughput, delay for traffic and CPU, Memory utilization for firewall containers are gathered.
 
+#### Experiment benchmark for evaluation
+- iperf3
+- netperf
+- nuttcp
+- MySQL
+- Redis
+- FIO (using NFS)
+- Stream
+
 <br>
 
-## Docker Setup
+# Docker
+Docker is a powerful platform that enables developers to automate the deployment of applications inside lightweight, portable containers. These containers encapsulate all the necessary dependencies and libraries, ensuring that the application run consistently across different environments. 
+
+This guide will help to set up the experimental topology for firewall evaluation using Docker.
+
+## Setup
+Dockerfiles are used to create container images. Dockerfile mentions all the libraries that are required for experiments. Therefore, when creating the image all these libraries will be installed.
+
 <!-- Docker file is used to build images for client, server and firewall.
 The docker file name is dockerfile.<Build name>. Build name in this case will be either client, server or firewall -->
 - ### Docker image build command
@@ -75,8 +83,18 @@ The docker file name is dockerfile.<Build name>. Build name in this case will be
 
 <br>
 
+## Experiments
 
-## QEMU Setup
+<br>
+
+# QEMU
+QEMU (Quick Emulator) is an open-source machine emulator and virtualizer that enables users to run virtual machines with different architectures. It provides a powerful environment for testing, development and experimentation, allowing to emulate a wide variety of hardware platforms and guest operating systems.
+
+This guide will help to set up the experimental topology for firewall evaluation using QEMU.
+
+## Setup
+Creating virtual machine requires iso (optical disc image) of the operating system whose VM is being created. Such iso image contains all the necessary details for disk layout, operating system and other important setings. VMs are created using these iso images with the configurations for resource allocation to the VM. 
+
 <!-- Creating bridge network for VMs-->
 - ### Create two TAP, tap-client and tap-server
     ```
@@ -210,4 +228,54 @@ After creating the VMs, the devices needs to be given network configurations to 
 2. packets from client goes first to firewall then to server
 3. packets from server to client does not go through firewall
 
+<br>
+
+## Install Benchmark
+
+<b> 
+
+1. On client VM
+</b>
+<br>
+Run following command to install all the required benchmarks
+    ```
+    sudo apt-get install iperf3 netperf nuttcp redis-tools sysbench mysql-client fio traceroute
+    ```
+<b>
+<br>
+
+2. On server VM
+</b>
+<br>
+Run following command to install all the required benchmarks
+    ```
+    sudo apt-get install iperf3 netperf nuttcp redis-server mysql-server fio
+    ```
+
+    <br>
+    
+    Configure mysql user and database for experiments
+    ```
+    sudo service mysql start
+
+    sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';"
+    sudo mysql -e "CREATE USER 'root'@'%' IDENTIFIED BY 'password';"
+    sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' GRANT OPTION;"
+    sudo mysql -e "FLUSH PRIVILEGES;"
+
+    sudo sed -i "s/bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/mysql.conf.d/mysqld.cnf
+
+    sudo service mysql restart
+
+    sudo mysql -u root -p'password' -e "CREATE DATABASE benchmark;"
+    ```
+    
+    <br>
+    
+    Configure Redis to allow remote connections
+    ```
+    sudo nano /etc/redis/redis.conf
+
+    bind: 0.0.0.0
+    ```
 <br>
