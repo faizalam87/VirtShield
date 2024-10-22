@@ -41,7 +41,7 @@ The docker file name is dockerfile.<Build name>. Build name in this case will be
 <!-- Run the containers, configure them with the custom network created and provide a static IP -->
 - ### Run the client and firewall on the client-net and server on server-net
     ```
-    docker run -d --name <container name> --net client-net --ip <IP address> <Build name>
+    docker run -d --name <container name> --net client-net --ip <IP address> --cpus="2" --memory="1g" <Build name>
     ```
     <b>Note:</b>
     - <b>Client:</b> 192.168.1.3
@@ -305,3 +305,5 @@ Run following command to install all the required benchmarks
     ```
     scp <VM username>@<VM IP>:<file location on VM> <destination location on host>
     ```
+
+- Use '-r' flag to copy directories

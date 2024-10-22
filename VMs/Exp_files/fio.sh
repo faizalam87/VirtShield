@@ -1,9 +1,9 @@
 #!/bin/bash
 
-SERVER_IP="192.168.10.5"
+SERVER_IP="192.168.2.3"
 OUTPUT_FILE="fio_results.txt"
 PORT="8765"
-RUN_TIME="60"  
+RUN_TIME="300"  
 
 NAME="benchmark"
 TYPE="randrw"

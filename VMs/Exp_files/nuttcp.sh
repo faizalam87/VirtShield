@@ -1,7 +1,8 @@
 #!/bin/bash
 
 SERVER_IP="192.168.10.5"
-OUTPUT_FILE="nuttcp_results.txt"
-RUN_TIME="60"  
+OUTPUT_FILE="../Results/nuttcp_results.txt"
+RUN_TIME="300"
+BANDWIDTH="50g" 
 
-nuttcp -T $RUN_TIME -o $OUTPUT_FILE $SERVER_IP
+nuttcp -T$RUN_TIME -R$BANDWIDTH $SERVER_IP > $OUTPUT_FILE

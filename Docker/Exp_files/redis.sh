@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SERVER_IP="192.168.2.3"
-OUTPUT_FILE="redis_results.txt"
+OUTPUT_FILE="../Results/redis_results.txt"
 NUM_REQUEST="1000000"
 CONNECTIONS="50"
 

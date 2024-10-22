@@ -2,7 +2,7 @@
 
 SERVER_IP="192.168.10.5"
 OUTPUT_FILE="mysql_results.txt"
-RUN_TIME="60"  
+RUN_TIME="300"  
 MYSQL_HOST="root"
 MYSQL_PASSWORD="password"
 MYSQL_DB="benchmark"
