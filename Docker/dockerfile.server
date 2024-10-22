@@ -20,17 +20,10 @@ RUN service mysql start && \
 RUN service mysql start && \
     mysql -u root -p'password' -e "CREATE DATABASE benchmark;"
 
-    # Setup NFS for fio
-# # Create a directory to share
-# RUN mkdir -p /export/fio
-
-# # Give necessary permissions
-# RUN chown nobody:nogroup /export/fio && \
-#     chmod 777 /export/fio
-
-# # Configure the NFS exports
-# RUN echo "/export/fio *(rw,sync,no_subtree_check,no_root_squash)" >> /etc/exports && \
-#     exportfs -ra
+# Setup Redus server and allow requests from all IP addresses
+RUN sed -i "s/^bind.*/bind 0.0.0.0/" /etc/redis/redis.conf && \
+    sed -i "s/^protected-mode.*/protected-mode no/" /etc/redis/redis.conf && \
+    service redis-server restart
 
 # Start all the services
 CMD ["sh", "-c", "service mysql start & service redis-server start & fio --server --port=8765 & iperf3 -s & netserver & nuttcp -S & tail -f /dev/null"]

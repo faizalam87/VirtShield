@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     mysql-client \
     fio \
     traceroute \
+    iproute2 \
     && apt-get clean
 
 CMD ["sleep", "infinity"]

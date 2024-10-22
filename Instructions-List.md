@@ -69,8 +69,7 @@ The docker file name is dockerfile.<Build name>. Build name in this case will be
     ```
     docker exec -it client bash
 
-    ip route del default
-    ip route add default via 192.168.1.2
+    ip route add 192.168.2.3 via 192.168.1.2
     ```
 <br>
 
@@ -84,6 +83,18 @@ The docker file name is dockerfile.<Build name>. Build name in this case will be
 <br>
 
 ## Experiments
+
+
+#### Copy files between Container and Host
+- Copy files from host to VM
+    ```
+    docker cp <file location on host> <Container name>:<destination location in container>
+    ```
+
+- Copy files from container to host
+    ```
+    dcoker cp <Container name>:<file location in container> <destination location on host>
+    ```
 
 <br>
 
@@ -269,13 +280,28 @@ Run following command to install all the required benchmarks
 
     sudo mysql -u root -p'password' -e "CREATE DATABASE benchmark;"
     ```
-    
     <br>
     
     Configure Redis to allow remote connections
     ```
-    sudo nano /etc/redis/redis.conf
+    sudo sed -i "s/^bind.*/bind 0.0.0.0/" /etc/redis/redis.conf
 
-    bind: 0.0.0.0
+    sudo service redis-server restart
     ```
 <br>
+
+#### Copy files between VM and Host
+- Install ssh server on VM
+    ```
+    sudo apt-get install openssh-server
+    ```
+
+- Copy files from host to VM
+    ```
+    scp <file location on host> <VM username>@<VM IP>:<destination location on VM>
+    ```
+
+- Copy files from VM to host
+    ```
+    scp <VM username>@<VM IP>:<file location on VM> <destination location on host>
+    ```
