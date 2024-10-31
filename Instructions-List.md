@@ -131,7 +131,7 @@ Creating virtual machine requires iso (optical disc image) of the operating syst
 
     sudo iptables -t nat -A POSTROUTING -o enp3s0 -j MASQUERADE
     
-    sudo iptables -A DORWARD -i br0 -o br0 -j ACCEPT
+    sudo iptables -A FORWARD -i br0 -o br0 -j ACCEPT
     ```
 
 <!-- Allow the new bridges to be used by qemu -->
