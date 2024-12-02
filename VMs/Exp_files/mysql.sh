@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SERVER_IP="192.168.10.5"
-OUTPUT_FILE="mysql_results.txt"
+OUTPUT_FILE="../Results/mysql/results_"$1".txt"
 RUN_TIME="300"  
 MYSQL_HOST="root"
 MYSQL_PASSWORD="password"

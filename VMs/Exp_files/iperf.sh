@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SERVER_IP="192.168.10.5"
-OUTPUT_FILE="../Results/iperf_results.txt"
+OUTPUT_FILE="../Results/iperf/results_"$1".txt"
 BANDWIDTH="50G" 
 RUN_TIME="300"  
 

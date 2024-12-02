@@ -143,7 +143,7 @@ Creating virtual machine requires iso (optical disc image) of the operating syst
 
     - Add following lines to the file
         ```
-        allow br-0
+        allow br0
         ```
     
     - Ensure that qemu-bridge-helper has correct permissions

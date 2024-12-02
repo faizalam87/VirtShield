@@ -1,0 +1,1 @@
+38609.7961 MB / 300.02 sec = 1079.5218 Mbps 20 %TX 43 %RX 0 retrans 3.07 msRTT
