@@ -1,1 +1,1 @@
-1763603.6250 MB / 300.00 sec = 49313.9423 Mbps 99 %TX 66 %RX 0 retrans 0.08 msRTT
+1640141.3750 MB / 300.00 sec = 45861.6830 Mbps 99 %TX 70 %RX 0 retrans 0.07 msRTT
