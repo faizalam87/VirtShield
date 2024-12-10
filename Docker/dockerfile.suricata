@@ -10,4 +10,9 @@ RUN add-apt-repository ppa:oisf/suricata-stable
 
 RUN apt-get install suricata -y
 
+RUN apt-get update && \
+    apt-get install -y linux-tools-common linux-tools-generic linux-tools-$(uname -r) && \
+    apt-get clean
+
+
 CMD ["sleep", "infinity"]

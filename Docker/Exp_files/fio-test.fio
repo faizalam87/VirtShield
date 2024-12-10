@@ -1,0 +1,12 @@
+[global]
+ioengine=libaio
+direct=1
+rw=randread
+bs=4k
+size=1G
+time_based=1
+runtime=300
+numjobs=4
+
+[write-test]
+filename=fio_test_file.txt

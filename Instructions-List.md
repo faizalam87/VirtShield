@@ -42,6 +42,7 @@ The docker file name is dockerfile.<Build name>. Build name in this case will be
 - ### Run the client and firewall on the client-net and server on server-net
     ```
     docker run -d --name <container name> --net client-net --ip <IP address> --cpus="2" --memory="1g" <Build name>
+    
     ```
     <b>Note:</b>
     - <b>Client:</b> 192.168.1.3

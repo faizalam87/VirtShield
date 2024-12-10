@@ -7,7 +7,7 @@ MYSQL_HOST="root"
 MYSQL_PASSWORD="password"
 MYSQL_DB="benchmark"
 TABLES="10"
-TABLE_SIZE="1000000"
+TABLE_SIZE="10000"
 THREADS="8"
 
 # preapre command
