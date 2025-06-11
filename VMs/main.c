@@ -30,15 +30,33 @@ void packet_handler(u_char *args, const struct pcap_pkthdr *header, const u_char
            ip->protocol,
            header->len);
 
-    enqueue(&queue, header->ts.tv_usec);
+    enqueue(&queue, header->ts.tv_usec, packet, header->len);
+
 }
 
 void process_packets() {
-    uint64_t ts;
-    while (dequeue(&queue, &ts)) {
-        total_cycles += CYCLES_PER_PACKET;
-        printf("Processed packet at timestamp %lu, total cycles = %lu\n", ts, total_cycles);
-    }
+uint64_t ts;
+u_char *packet_data;
+int packet_len;
+
+while (dequeue(&queue, &ts, &packet_data, &packet_len)) {
+    total_cycles += CYCLES_PER_PACKET;
+    printf("Processed packet at timestamp %lu, total cycles = %lu, length = %d\n",
+           ts, total_cycles, packet_len);
+
+    printf("Packet data (hex): ");
+// for (int i = 0; i < packet_len; i++) {
+//     printf("%02X ", packet_data[i]);
+//     if ((i + 1) % 16 == 0) printf("\n");  // new line every 16 bytes
+// }
+fwrite(packet_data, 1, packet_len, stdout);
+printf("\n");
+
+    // Deep Packet Inspection to be updated
+     
+    free(packet_data);
+}
+
 }
 
 int main() {
@@ -60,9 +78,9 @@ int main() {
     pcap_set_snaplen(handle, 65535);
     pcap_set_promisc(handle, 1);
     pcap_set_timeout(handle, 100);
-
-    if (pcap_activate(handle) != 0) {
-        fprintf(stderr, "Error activating pcap handle\n");
+    int status = pcap_activate(handle);
+    if (status != 0) {
+        fprintf(stderr, "Error activating pcap handle: %s\n", pcap_statustostr(status));
         return 1;
     }
 
