@@ -2,10 +2,31 @@
 
 # CONFIGURATION
 SERVER_IP="192.168.10.5"
-FIREWALL_MAC="52:54:00:12:34:02"   
+MODEL_MAC="52:54:00:12:34:02"      # MAC of the model VM
+SERVER_MAC="52:54:00:12:34:03"     # MAC of the server VM
 
-echo "Setting ARP entry to point $SERVER_IP to firewall MAC $FIREWALL_MAC"
-sudo arp -s $SERVER_IP $FIREWALL_MAC
+# USAGE CHECK
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 [model|direct]"
+    exit 1
+fi
 
-echo "ARP entry configured:"
+MODE=$1
+
+if [ "$MODE" == "model" ]; then
+    echo "Routing to server ($SERVER_IP) via MODEL (MAC: $MODEL_MAC)"
+    sudo arp -s $SERVER_IP $MODEL_MAC
+
+elif [ "$MODE" == "direct" ]; then
+    echo "Routing to server ($SERVER_IP) DIRECTLY (MAC: $SERVER_MAC)"
+    sudo arp -s $SERVER_IP $SERVER_MAC
+
+else
+    echo "Invalid mode: $MODE"
+    echo "Usage: $0 [model|direct]"
+    exit 1
+fi
+
+# Show ARP entry
+echo "Updated ARP entry:"
 arp -n | grep $SERVER_IP
