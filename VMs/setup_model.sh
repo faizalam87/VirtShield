@@ -12,3 +12,8 @@ sudo iptables -A FORWARD -s $CLIENT_IP -d $SERVER_IP -j ACCEPT
 
 echo "Current FORWARD rules:"
 sudo iptables -L FORWARD -v -n
+
+sudo apt update
+sudo apt install libpcap-dev
+
+sudo apt install make

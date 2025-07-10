@@ -23,7 +23,7 @@ Ensure you have an Ubuntu ISO (e.g., `ubuntu.iso`) placed in your project/VMs di
 This script sets up the bridge network (`br0`) and enables NAT to allow VM internet access.
 
 ```bash
-./setup_vm.sh
+./setup_host.sh
 ```
 
 ---
