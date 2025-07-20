@@ -5,6 +5,9 @@ SERVER_IP="192.168.10.5"
 MODEL_MAC="52:54:00:12:34:02"      # MAC of the model VM
 SERVER_MAC="52:54:00:12:34:03"     # MAC of the server VM
 
+# SSH CONFIG (for copying performance framework)
+CLIENT_SSH="user@192.168.10.3"     # 🔧 Update with actual client VM IP and username
+
 # USAGE CHECK
 if [ $# -ne 1 ]; then
     echo "Usage: $0 [model|direct]"
@@ -30,3 +33,9 @@ fi
 # Show ARP entry
 echo "Updated ARP entry:"
 arp -n | grep $SERVER_IP
+
+# Copy performance framework to client
+echo "Copying performance framework to client VM ($CLIENT_SSH)..."
+scp -r ./performance "$CLIENT_SSH:/home/$(whoami)/"
+
+echo "✅ Routing set and performance framework deployed to client VM."

@@ -39,4 +39,8 @@ docker exec model iptables -t nat -A POSTROUTING -s 192.168.1.3 -d 192.168.2.3 -
 echo "Adding route to client to reach server via model..."
 docker exec client ip route add 192.168.2.3 via 192.168.1.2
 
-echo "✅ Docker model (firewall) setup complete."
+# Step 7: Copy performance framework into client container
+echo "Copying performance test framework into client container..."
+docker cp ./performance client:/root/performance
+
+echo "✅ Docker model (firewall) setup complete, and performance framework copied to client."
