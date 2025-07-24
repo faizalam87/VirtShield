@@ -41,6 +41,6 @@ docker exec client ip route add 192.168.2.3 via 192.168.1.2
 
 # Step 7: Copy performance framework into client container
 echo "Copying performance test framework into client container..."
-docker cp ./performance client:/root/performance
+docker cp ../performance client:/root/performance
 
 echo "✅ Docker model (firewall) setup complete, and performance framework copied to client."

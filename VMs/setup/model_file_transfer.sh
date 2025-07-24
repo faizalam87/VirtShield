@@ -13,14 +13,6 @@ CODE_DIR="./"  # Change this if your code is in a specific subfolder
 # TEMP TAR FILE
 ARCHIVE_NAME="virtshield_code.tar.gz"
 
-# # Copy setup scripts
-# echo "Copying setup script to Client VM..."
-# scp setup_client.sh $CLIENT_VM_USER@$CLIENT_VM_IP:/home/$CLIENT_VM_USER
-
-# echo "Copying setup script to Firewall VM..."
-# scp setup_model.sh $FIREWALL_VM_USER@$FIREWALL_VM_IP:/home/$FIREWALL_VM_USER
-
-
 # Archive and copy all user+kernel code to firewall
 echo "Creating archive of user/kernel code..."
 tar -czf $ARCHIVE_NAME $(find $CODE_DIR -maxdepth 1 -name '*.c' -o -name '*.h' -o -name 'Makefile')

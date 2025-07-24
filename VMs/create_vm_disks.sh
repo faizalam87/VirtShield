@@ -5,7 +5,7 @@ set -e
 
 echo "[+] Creating VM disk images (10G each)..."
 
-for vm in client firewall server; do
+for vm in client model server; do
     if [ -f "$vm.qcow2" ]; then
         echo "[!] $vm.qcow2 already exists. Skipping..."
     else
