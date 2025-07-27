@@ -1,2 +1,9 @@
 *.iso
 *.qcow2
+*.cmd
+*.ko
+*.o
+*.order
+*.symvers
+*.backup
+*.mod*
