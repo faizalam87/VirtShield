@@ -1,0 +1,17 @@
+#!/bin/bash
+
+MODE=vm
+TYPE=kernel  # or user
+
+# VM IPs
+CLIENT_IP="192.168.10.4"
+MODEL_IP="192.168.10.3"
+SERVER_IP="192.168.10.5"
+
+# VM MACs (informational for now)
+CLIENT_MAC="52:54:00:12:34:01"
+MODEL_MAC="52:54:00:12:34:02"
+SERVER_MAC="52:54:00:12:34:03"
+
+ENABLE_TCPDUMP=true
+ENABLE_MODEL_PROFILING=false

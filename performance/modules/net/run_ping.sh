@@ -2,7 +2,7 @@
 
 MODE_FLAG=$1
 LOGDIR=$2
-source ./configs/env.sh
+SERVER_IP=$3
 
 OUTFILE="$LOGDIR/ping.log"
 COUNT=10

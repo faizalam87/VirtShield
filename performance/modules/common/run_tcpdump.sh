@@ -2,7 +2,7 @@
 
 MODE_FLAG=$1
 LOGDIR=$2
-source ./configs/env.sh
+# source ./configs/env.sh
 
 OUTFILE="$LOGDIR/tcpdump.pcap"
 INTERFACE="eth0"  # 🔧 Update if needed

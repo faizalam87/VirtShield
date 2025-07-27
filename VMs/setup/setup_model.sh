@@ -14,6 +14,7 @@ echo "Current FORWARD rules:"
 sudo iptables -L FORWARD -v -n
 
 sudo apt update
-sudo apt install libpcap-dev
+sudo apt install libpcap-dev make
 
-sudo apt install make
+sudo apt install sysstat linux-tools-common linux-tools-$(uname -r)
+sudo sh -c 'echo -1 > /proc/sys/kernel/perf_event_paranoid'

@@ -13,16 +13,23 @@ MODEL_VM_IP="192.168.10.3"
 
 # Copy setup scripts
 echo "Copying setup script to Client VM..."
-scp setup_client.sh $CLIENT_VM_USER@$CLIENT_VM_IP:/home/$CLIENT_VM_USER
+scp -r ../../performance setup_client.sh ../tests $CLIENT_VM_USER@$CLIENT_VM_IP:/home/$CLIENT_VM_USER
+
+# # Copy performance framework to client
+# echo "Copying performance framework to client VM ($CLIENT_SSH)..."
+# scp -r ../../performance $CLIENT_VM_USER@$CLIENT_VM_IP:/home/$CLIENT_VM_USER/
 
 echo "Copying setup script to MODEL VM..."
-scp setup_model.sh $MODEL_VM_USER@$MODEL_VM_IP:/home/$MODEL_VM_USER
+scp -r setup_model.sh ../../performance/modules/system $MODEL_VM_USER@$MODEL_VM_IP:/home/$MODEL_VM_USER
+
 
 echo "Setup scripts copied to corresponding VM's home directories."
 echo "You can now SSH into each VM and run the setup scripts to configure them."
 echo "Example commands:"
 echo "  ssh $CLIENT_VM_USER@$CLIENT_VM_IP  and ./setup_client.sh <direct/model>"
 echo "  ssh $MODEL_VM_USER@$MODEL_VM_IP  and ./setup_model.sh"
+
+
 
 echo "Make sure to run these scripts with appropriate execute permissions."
 

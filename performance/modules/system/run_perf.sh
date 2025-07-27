@@ -2,9 +2,20 @@
 
 MODE_FLAG=$1
 LOGDIR=$2
-source ./configs/env.sh
+OUTFILE="$LOGDIR/perf_user_space.log"
 
-OUTFILE="$LOGDIR/perf_stat.log"
+echo "Recording perf stat for user_space_model..." > "$OUTFILE"
 
-echo "Recording perf stat..." > "$OUTFILE"
-perf stat -e cycles,instructions,cache-misses -a sleep 10 >> "$OUTFILE" 2>&1
+# Trap Ctrl+C to clean up if needed
+cleanup() {
+  echo " Caught interrupt, exiting..." >> "$OUTFILE"
+  exit 1
+}
+trap cleanup INT
+
+# Run the binary directly using perf stat
+sudo perf stat \
+  -e cycles,instructions,cache-misses,branch-misses \
+  ../virtshield_deploy/user_space_model >> "$OUTFILE" 2>&1
+
+echo " Perf stat completed." >> "$OUTFILE"

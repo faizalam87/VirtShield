@@ -1,0 +1,13 @@
+#!/bin/bash
+
+MODE=container
+TYPE=kernel  # or user
+
+# Docker IPs
+CLIENT_IP="192.168.1.3"
+MODEL_IP_CLIENT_NET="192.168.1.2"
+MODEL_IP_SERVER_NET="192.168.2.2"
+SERVER_IP="192.168.2.3"
+
+ENABLE_TCPDUMP=true
+ENABLE_MODEL_PROFILING=false

@@ -34,8 +34,6 @@ fi
 echo "Updated ARP entry:"
 arp -n | grep $SERVER_IP
 
-# Copy performance framework to client
-echo "Copying performance framework to client VM ($CLIENT_SSH)..."
-scp -r ../performance "$CLIENT_SSH:/home/ubuntu/"
 
-echo "✅ Routing set and performance framework deployed to client VM."
+
+echo "✅ Routing set deployed to client VM."

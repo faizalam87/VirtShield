@@ -8,7 +8,7 @@ FIREWALL_VM_USER="model"
 FIREWALL_VM_IP="192.168.10.3"
 
 FIREWALL_DEPLOY_DIR="/home/$FIREWALL_VM_USER/virtshield_deploy"
-CODE_DIR="./"  # Change this if your code is in a specific subfolder
+CODE_DIR="../"  # Change this if your code is in a specific subfolder
 
 # TEMP TAR FILE
 ARCHIVE_NAME="virtshield_code.tar.gz"

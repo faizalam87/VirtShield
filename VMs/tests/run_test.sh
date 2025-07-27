@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-source ./configs/env.sh
+source ../performance/configs/env.vm.sh
 
 MODE_FLAG=$1
 if [[ "$MODE_FLAG" != "--baseline" && "$MODE_FLAG" != "--secure" ]]; then
@@ -18,22 +18,22 @@ echo "Logs will be stored in: $LOGDIR"
 
 # Network tests
 echo "[1/4] Running iperf3"
-bash ./modules/net/run_iperf.sh "$MODE_FLAG" "$LOGDIR"
+bash ../performance/modules/net/run_iperf.sh $MODE_FLAG $LOGDIR $SERVER_IP
 
 echo "[2/4] Running ping"
-bash ./modules/net/run_ping.sh "$MODE_FLAG" "$LOGDIR"
+bash ../performance/modules/net/run_ping.sh $MODE_FLAG $LOGDIR $SERVER_IP
 
-# System usage
-echo "[3/4] Running pidstat"
-bash ./modules/system/run_pidstat.sh "$MODE_FLAG" "$LOGDIR"
+# # System usage
+# echo "[3/4] Running pidstat"
+# bash ./modules/system/run_pidstat.sh "$MODE_FLAG" "$LOGDIR"
 
-echo "[4/4] Running perf stat"
-bash ./modules/system/run_perf.sh "$MODE_FLAG" "$LOGDIR"
+# echo "[4/4] Running perf stat"
+# bash ./modules/system/run_perf.sh "$MODE_FLAG" "$LOGDIR"
 
 # Optional: packet capture (can be disabled with flag)
 if [[ "$ENABLE_TCPDUMP" == "true" ]]; then
   echo "[Optional] Running tcpdump"
-  bash ./modules/common/run_tcpdump.sh "$MODE_FLAG" "$LOGDIR"
+  bash ../performance/modules/common/run_tcpdump.sh "$MODE_FLAG" "$LOGDIR"
 fi
 
 echo "=== Done ==="
