@@ -45,13 +45,13 @@ docker exec client ip route add 192.168.2.3 via 192.168.1.2
 
 # Client-side performance files
 docker exec client mkdir -p /root/performance
-docker cp -r ../performance/configs                client:/root/performance/
+docker cp -r ../../performance/configs                client:/root/performance/
 
-docker cp ../performance/modules/common/run_tcpdump.sh            client:/root/performance/
-docker cp ../performance/modules/net/run_iperf.sh              client:/root/performance/
-docker cp ../performance/modules/net/run_ping.sh               client:/root/performance/
+docker cp ../../performance/modules/common/run_tcpdump.sh            client:/root/performance/
+docker cp ../../performance/modules/net/run_iperf.sh              client:/root/performance/
+docker cp ../../performance/modules/net/run_ping.sh               client:/root/performance/
 
 # Model-side performance files
 docker exec model mkdir -p /root/performance
-docker cp ../performance/modules/system/run_perf.sh                model:/root/performance/
-docker cp ../performance/modules/system/run_pidstat.sh             model:/root/performance/
+docker cp ../../performance/modules/system/run_perf.sh                model:/root/performance/
+docker cp ../../performance/modules/system/run_pidstat.sh             model:/root/performance/
