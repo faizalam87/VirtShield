@@ -69,8 +69,6 @@ From the host, run:
 ./vm_setup_file_transfer.sh
 ```
 
-This copies the respective setup scripts into each VM using `scp`.
-
 > 🔐 To SSH into any VM, install OpenSSH Server **inside the VM**:
 >
 > ```bash
@@ -108,7 +106,7 @@ Each step prints messages with `echo` so you can verify progress.
 
 ---
 
-### 🔁 Packet Flow Configuration
+## 🔁 Packet Flow Configuration
 
 Once all VMs are set up:
 
@@ -116,7 +114,7 @@ Once all VMs are set up:
 
 ---
 
-## 🧪 Benchmark Tools Installed
+## 📊 Benchmark Tools Installed
 
 **Client/Model:**
 - `iperf3`, `netperf`, `nuttcp`, `fio`, `mysql-client`, `redis-tools`, `sysbench`, `traceroute`
@@ -126,56 +124,157 @@ Once all VMs are set up:
 
 ---
 
-## 📊 Performance and Benchmarking (Coming Soon)
+## 🔐 Security Model: Deployment and Evaluation
 
-This section will describe:
-- How to run end-to-end benchmarks from the Client VM
-- How to capture microarchitectural metrics from the Model VM using `perf`
-- How to compare performance between `direct` and `model` paths
-- Best practices for logging and result interpretation
+### 🚀 1. Deploying the Security Model
 
-→ Detailed instructions will be added in the next update.
+#### 📉 A. Source Code Location
+
+In the **Model (Firewall) VM**, the security model lives in:
+
+```
+~/VirtShield/
+├── kernel_space.c
+├── user_space_model.c
+├── packet_queue.c/h
+├── Makefile
+└── performance/
+```
+
+#### 🔧 B. Modifying the Model
+
+- **Kernel-space model**: edit `kernel_space.c`
+- **User-space model**: edit `user_space_model.c` and `packet_queue.c/h`
+
+#### ⚖️ C. Building the Model
+
+```bash
+cd ~/VirtShield
+make
+```
+
+Builds:
+- `kernel_space.ko`
+- `user_space_model`
+
+#### 📌 D. Running the Model
+
+From **Client VM**:
+```bash
+./setup_client.sh model
+```
+
+Then in **Model VM**:
+
+- **Kernel-space**:
+  ```bash
+  sudo insmod kernel_space.ko
+  ```
+- **User-space**:
+  ```bash
+  sudo ./user_space_model
+  ```
+
+To unload kernel module:
+```bash
+sudo rmmod kernel_space
+```
 
 ---
 
-## 🛠️ Troubleshooting: VM Has No Internet Access
+## 📈 2. Measuring Performance
 
-If your VM can **ping internal IPs (e.g., 192.168.10.1)** but **cannot reach the internet**, this is likely caused by `firewalld` on the host blocking NAT or forwarding.
+VirtShield measures two performance dimensions:
 
-### 🔍 Symptoms
-- `ping 8.8.8.8` from VM fails
-- `ping 192.168.10.1` works
-- `tcpdump` on host shows packets leaving `br0` but not `eno1`
-- `conntrack` has no entries
-- ICMP unreachable with **“admin prohibited”**
+### 🚁 A. Network Performance (Client VM)
 
-### ✅ Fix
+#### ✅ Where:
+```bash
+ssh client
+```
 
-1. **Check if firewalld is running:**
-   ```bash
-   sudo firewall-cmd --state
-   ```
+#### ⚖️ Run benchmark:
+```bash
+cd ~/VirtShield
+./run_test.sh
+```
 
-2. **Assign `br0` to a trusted zone:**
-   ```bash
-   sudo firewall-cmd --permanent --zone=trusted --add-interface=br0
-   sudo firewall-cmd --reload
-   ```
+Measures:
+- **Latency**
+- **Throughput**
 
-3. **Enable masquerading:**
-   ```bash
-   sudo firewall-cmd --zone=trusted --permanent --add-masquerade
-   sudo firewall-cmd --reload
-   ```
+Tools used: `iperf3`, `netperf`, `nuttcp`
 
-4. **Enable IP forwarding:**
-   ```bash
-   sudo sysctl -w net.ipv4.ip_forward=1
-   ```
+> 📂 Results saved for both `direct` and `model` modes.
 
-5. **Test connectivity again from VM:**
-   ```bash
-   ping 8.8.8.8
-   ```
+---
 
-If this works, the issue was with firewalld blocking NAT. These changes make the setup persistent and safe without disabling the firewall entirely.
+### 🧠 B. Microarchitectural Profiling (Model VM)
+
+#### ✅ Where:
+```bash
+ssh model
+cd ~/VirtShield/performance
+```
+
+#### ⚖️ Run perf profiling:
+```bash
+sudo ./run_perf.sh <logdir> <mode>
+# mode: 0 = user-space, 1 = kernel-space
+```
+
+**What it does:**
+
+- **Kernel-space (`mode=1`)**:
+  - Records system-wide events for 10 seconds
+  - Uses `perf record` + `perf report --dsos=kernel_space.ko`
+  - Logs:
+    - `<logdir>/perf_kernel.log`
+    - `<logdir>/perf_kernel.data`
+
+- **User-space (`mode=0`)**:
+  - Runs `user_space_model` under `perf stat`
+  - Logs:
+    - `<logdir>/perf_user_space.log`
+
+---
+
+## 📁 3. Logs and Debugging
+
+| Component        | Command or File                                   |
+|------------------|----------------------------------------------------|
+| Kernel logs      | `dmesg`, `sudo journalctl -k | grep VirtShield`   |
+| User-space logs  | Run binary with `> user_log.txt`                  |
+| Perf outputs     | `perf_kernel.log`, `perf_user_space.log`          |
+| Perf raw data    | `perf_kernel.data` + `perf report`                |
+
+---
+
+## 🥵 Troubleshooting: No Internet in VMs
+
+If a VM can **ping 192.168.10.1** but **not the internet**:
+
+### ⚡ Symptoms:
+- `ping 8.8.8.8` fails
+- Internal ping works
+- `tcpdump` on host shows outgoing packets
+- No `conntrack` entries
+- ICMP unreachable (admin prohibited)
+
+### ✅ Fix:
+
+```bash
+sudo firewall-cmd --permanent --zone=trusted --add-interface=br0
+sudo firewall-cmd --zone=trusted --permanent --add-masquerade
+sudo firewall-cmd --reload
+sudo sysctl -w net.ipv4.ip_forward=1
+```
+
+Then test again:
+```bash
+ping 8.8.8.8
+```
+
+---
+
+You're now ready to run VirtShield with or without the security model, and compare performance across modes using both network benchmarks and CPU-level instrumentation.
