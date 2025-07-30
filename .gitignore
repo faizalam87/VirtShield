@@ -6,4 +6,5 @@
 *.order
 *.symvers
 *.backup
-*.mod*
+*.mod.*
+Docker/.bash_history
