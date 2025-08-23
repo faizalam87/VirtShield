@@ -8,26 +8,12 @@
 
 </center> 
 
-<br>
-
-## Developers:
-<b>
-
-1. Sahil Purohit
-2. Faiz Alam
-
-</b>
-
-## Mentor:
-<b>
-
-- Professor Dr. Khaled Ahmed Farfoush
-</b>
-
-<br>
 
 ### Project Details
+Refer Readme for each Docker and VM's inside corresponding folders:
 
+1. Docker - [links](Docker/container_setup_README.md)
+2. VM - [links](VMs/vm_setup_README.md)
 
 
 ### File Structure
