@@ -1,6 +1,6 @@
 # VirtShield VM Setup Guide (QEMU-based)
 
-This guide walks you through the setup of a **Virtual Machine (VM)** for the VirtShield platform using QEMU. Please follow the **order of execution** exactly to ensure correct setup.
+This guide walks you through setting up a **Virtual Machine (VM)** for the VirtShield platform using QEMU. Please follow the **order of execution** exactly to ensure correct setup.
 ---
 
 ##  Prerequisites
@@ -49,12 +49,7 @@ In three terminals or background sessions, run:
 
 - Each script launches the respective VM with the proper MAC address, disk image, and ISO. In case there are permission errors, please make sure that you upgrade/downgrade permissions as required.
 - Follow along with the QEMU VM setup and press continue until you set up the username and password for client, server, and model.
-  
-
----
-
-### 3. VM MAC & IP Configuration
-The script configures the following MAC addresses and IP addresses.
+- The script configures the following MAC addresses and IP addresses while setting up the QEMU GUI.
 
 | VM     | MAC Address         | IP Address     | Role              |
 |--------|---------------------|----------------|-------------------|
@@ -62,7 +57,6 @@ The script configures the following MAC addresses and IP addresses.
 | Model  | 52:54:00:12:34:02   | 192.168.10.3   | Security Module   |
 | Server | 52:54:00:12:34:03   | 192.168.10.5   | Receiver          |
 
-While setting up the QEMU GUI 
 ---
 
 ### 4. Transfer Setup Scripts to VMs
@@ -103,7 +97,7 @@ SSH into each VM (or use QEMU terminal) and execute the appropriate script:
 These scripts configure:
 - Static IP and gateway via netplan
 - ARP redirection from client to model
-- IP forwarding and firewall rules in model
+- IP forwarding and firewall rules in the model
 - Benchmark tools installation (iperf3, fio, etc.)
 
 Each step prints messages with `echo` so you can verify progress.
