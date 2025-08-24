@@ -59,7 +59,35 @@ In three terminals or background sessions, run:
 
 - Each script launches the respective VM with the proper MAC address, disk image, and ISO. In case there are permission errors, please make sure that you upgrade/downgrade permissions as required.
 - Follow along with the QEMU VM setup and press continue until you set up the username and password for client, server, and model.
-- The script configures the following MAC addresses and IP addresses while setting up the QEMU GUI.
+  ### 3. Setting up the manual IP address 
+    ip addr show        
+    Output shows available interfaces and the associated bridge. (eg. ens3)
+    - #### Add IP address to file /etc/netplan/01-netcfg.yaml
+        
+        sudo nano /etc/netplan/01-netcfg.yaml     
+    
+    - #### Add the following lines to the file:
+ yaml
+network:
+  version: 2
+  ethernets:
+    ens3:
+      dhcp4: no
+      addresses: 192.168.10.4/24
+      routes:
+        - to: default
+          via: 192.168.10.1
+      nameservers:
+        addresses: 8.8.8.8
+      
+         
+    - #### Save the file and apply the configurations
+        
+        sudo netplan apply
+- <b>Client:</b> 192.168.10.4  
+- <b>Server:</b> 192.168.10.5  
+- <b>Firewall:</b> 192.168.10.3
+The script configures the following MAC addresses and IP addresses during the setup of the QEMU GUI.
 
 | VM     | MAC Address         | IP Address     | Role              |
 |--------|---------------------|----------------|-------------------|
