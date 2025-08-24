@@ -5,12 +5,13 @@ This guide walks you through the setup of a **Virtual Machine (VM)** for the Vir
 
 ##  Prerequisites
 
-- QEMU is installed on the host. QEMU enables users to run multiple virtual machines on a single physical machine, facilitating cross-platform development and testing. More details on QEMU installation is available https://www.qemu.org/download/.
-- Ubuntu ISO `ubuntu-22.04.5-live-server-amd64.iso` placed in the working directory  
+- **QEMU** QEMU is installed on the host. QEMU enables users to run multiple virtual machines on a single physical machine, facilitating cross-platform development and testing.
+  > For installation details, refer to the [QEMU download page](https://www.qemu.org/download/).
+- **UBUNTU ISO** The file ubuntu-22.04.5-live-server-amd64.iso should be placed in `VMs\setup` the directory that is used to initialize all virtual machines. This ensures consistent OS-level behavior across benchmarking runs, supporting reproducible container/VM workflows.
   > Download here: [Ubuntu 22.04.5 ISO](https://releases.ubuntu.com/22.04/)
-- If using a different ISO, update its name in `vm-client.sh`, `vm-model.sh`, and `vm-server.sh`.
+- **Alternative ISO** If using a different ISO, update its name in `vm-client.sh`, `vm-model.sh`, and `vm-server.sh` present in the folder `VMs\setup`.
 
-The following scripts must be present:
+- **Sanity Check** Please ensure the following scripts are present in the cloned folder `VMs\setup`:
 - `setup.sh`
 - `vm-client.sh`, `vm-model.sh`, `vm-server.sh`
 - `vm_setup_file_transfer.sh`
