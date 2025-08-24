@@ -25,7 +25,7 @@ This guide walks you through setting up a **Virtual Machine (VM)** for the VirtS
 - **Alternative ISO** If using a different ISO, update its name in `vm-client.sh`, `vm-model.sh`, and `vm-server.sh` present in the folder `VMs\setup`.
 
 - **Sanity Check** Please ensure the following scripts are present in the cloned folder `VMs\setup`:
-- `setup.sh`,  `vm-client.sh`, `vm-model.sh`, `vm-server.sh`, `vm_setup_file_transfer.sh`, `setup_client.sh`, `setup_model.sh`
+   `setup.sh`,  `vm-client.sh`, `vm-model.sh`, `vm-server.sh`, `vm_setup_file_transfer.sh`, `setup_client.sh`, `setup_model.sh`
 
 ---
 
