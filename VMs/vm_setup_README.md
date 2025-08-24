@@ -1,12 +1,11 @@
-# 🖥️ VirtShield VM Setup Guide (QEMU-based)
+# VirtShield VM Setup Guide (QEMU-based)
 
-This guide walks you through the **Virtual Machine (VM)** setup for the VirtShield platform using QEMU. Please follow the **order of execution** exactly to ensure correct setup.
-
+This guide walks you through the setup of a **Virtual Machine (VM)** for the VirtShield platform using QEMU. Please follow the **order of execution** exactly to ensure correct setup.
 ---
 
-## ✅ Prerequisites
+##  Prerequisites
 
-- QEMU installed on host  
+- QEMU is installed on the host. QEMU enables users to run multiple virtual machines on a single physical machine, facilitating cross-platform development and testing. More details on QEMU installation is available https://www.qemu.org/download/.
 - Ubuntu ISO `ubuntu-22.04.5-live-server-amd64.iso` placed in the working directory  
   > Download here: [Ubuntu 22.04.5 ISO](https://releases.ubuntu.com/22.04/)
 - If using a different ISO, update its name in `vm-client.sh`, `vm-model.sh`, and `vm-server.sh`.
