@@ -143,16 +143,6 @@ These scripts configure:
 
 Each step prints messages with `echo` so you can verify progress.
 
----
-
-##  Packet Flow Configuration
-
-Once all VMs are set up:
-
->  **Traffic from the client is routed to the server via the model (firewall) VM** — unless `direct` mode is used, in which case the client reaches the server directly.
-
----
-
 ##  Benchmark Tools Installed
 
 **Client/Model:**
