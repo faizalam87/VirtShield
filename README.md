@@ -144,16 +144,6 @@ These scripts configure:
 
 Each step prints messages with `echo` so you can verify progress.
 
-##  Benchmark Tools Installed
-
-**Client/Model:**
-- `iperf3`, `netperf`, `nuttcp`, `fio`, `mysql-client`, `redis-tools`, `sysbench`, `traceroute`
-
-**Server:**
-- `iperf3`, `netperf`, `nuttcp`, `fio`, `mysql-server`, `redis-server`
-
----
-
 ##  Security Model: Deployment and Evaluation
 
 ###  1. Deploying the Security Model
