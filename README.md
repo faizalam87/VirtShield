@@ -126,6 +126,7 @@ SSH into each VM (or use QEMU terminal) and execute the appropriate script:
   ```
   - Use `direct` if traffic should go straight from client to server.
   - Use `model` if traffic should go through the firewall (model VM).
+  -  Run ``` sudo apt-get install iperf3 netperf nuttcp redis-tools sysbench mysql-client fio traceroute ``` to install all the benchmarks.
 
 - **Model VM (Firewall)**:
   ```bash
