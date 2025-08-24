@@ -19,14 +19,14 @@ This guide walks you through the setup of a **Virtual Machine (VM)** for the Vir
 
 ---
 
-## 🛠️ Step-by-Step Setup
-
+## Step-by-Step VMs Setup
+We would create, connect, and configure three VMs: a client (which contains the benchmarks), a server (that receives and processes the packets), and a model that mimics a cloud infrastructure, where the model VMs host the security module, either implemented in user-space or kernel-space.
 ### 1. Host Setup and VM Disk Creation
 
 Run this **once on the host**:
 
 ```bash
-./setup.sh
+./VMs/setup/setup.sh
 ```
 
 This will:
@@ -42,23 +42,25 @@ This will:
 In three terminals or background sessions, run:
 
 ```bash
-./vm-client.sh
-./vm-model.sh
-./vm-server.sh
+.VMs/setup/vm-client.sh
+.VMs/setup/vm-model.sh
+.VMs/setup/vm-server.sh
 ```
 
-Each script launches the respective VM with proper MAC, disk image, and ISO.
+Each script launches the respective VM with the proper MAC address, disk image, and ISO.
 
 ---
 
 ### 3. VM MAC & IP Configuration
+The script configures the following MAC addresses and IP addresses.
 
 | VM     | MAC Address         | IP Address     | Role              |
 |--------|---------------------|----------------|-------------------|
 | Client | 52:54:00:12:34:01   | 192.168.10.4   | Traffic Generator |
-| Model  | 52:54:00:12:34:02   | 192.168.10.3   | Firewall          |
+| Model  | 52:54:00:12:34:02   | 192.168.10.3   | Security Module   |
 | Server | 52:54:00:12:34:03   | 192.168.10.5   | Receiver          |
 
+While setting up the QEMU GUI 
 ---
 
 ### 4. Transfer Setup Scripts to VMs
