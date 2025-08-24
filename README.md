@@ -68,7 +68,10 @@ In three terminals or background sessions, run:
 | Server | 52:54:00:12:34:03   | 192.168.10.5   | Receiver          |
 
 ---
-
+**Additional Debugging Tips**
+- If the system freezes due to high memory utilization, then restart your computer and rerun the scripts `setup.sh`, `vm-client.sh`, `vm-model.sh`, `vm-server.sh` 
+  It will restart from the last VM snapshots.
+- If the mouse cursor gets stuck with a QEMU window, try `Ctrl + Alt + G` or `Ctrl + Alt + Shift` to release it.
 ### 4. Transfer Setup Scripts to VMs
 
 From the host, run:
