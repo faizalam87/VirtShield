@@ -59,7 +59,7 @@ In three terminals or background sessions, run:
 
 - Each script launches the respective VM with the proper MAC address, disk image, and ISO. In case there are permission errors, please make sure that you upgrade/downgrade permissions as required.
 - Follow along with the QEMU VM setup and press continue until you set up the username and password for client, server, and model.
-  ### 3. Setting up the manual IP address 
+### 3. Setting up the manual IP address 
     ip addr show        
     Output shows available interfaces and the associated bridge. (eg. ens3)
     - #### Add IP address to file /etc/netplan/01-netcfg.yaml
