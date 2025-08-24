@@ -55,3 +55,8 @@ docker cp ../../performance/modules/net/run_ping.sh               client:/root/p
 docker exec model mkdir -p /root/performance
 docker cp ../../performance/modules/system/run_perf.sh                model:/root/performance/
 docker cp ../../performance/modules/system/run_pidstat.sh             model:/root/performance/
+
+# Server side startups
+# Start iperf3 server in background
+echo "[+] Starting iperf3 server..."
+nohup iperf3 -s &

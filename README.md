@@ -1,73 +1,76 @@
-<br>
+# VirtShield: Unified Setup Guide (VM and Container)
 
+## Overview
 
-<center>
+VirtShield is a research framework for evaluating security mechanisms in both **virtual machines (VMs)** and **containers**.\
+It enables controlled experiments with security models deployed in either kernel-space or user-space, while supporting end-to-end benchmarking of both **network performance** and **microarchitectural behavior**.
 
-# **VirtShield**: Evaluation of Firewall Performance in Virtualized and Containerized Systems
-#Test
+Two deployment options are supported:
 
-</center> 
+- **VM-based setup** using QEMU
+- **Container-based setup** (for this repository, we rely on **Docker**. Other runtimes may require adjustments.)
 
+Both setups follow the same topology:
 
-## File Structure
+- **Client**: traffic generator
+- **Model**: security model host (where the security model is deployed and tested)
+- **Server**: traffic receiver
 
-# VirtShield VM Setup Guide (QEMU-based)
+Two execution modes are available:
 
-This guide walks you through setting up a **Virtual Machine (VM)** for the VirtShield platform using QEMU. Please follow the **order of execution** exactly to ensure correct setup.
----
-
-##  Prerequisites
-
-- **QEMU** QEMU is installed on the host. QEMU enables users to run multiple virtual machines on a single physical machine, facilitating cross-platform development and testing.
-  > For installation details, refer to the [QEMU download page](https://www.qemu.org/download/).
-- **UBUNTU ISO** The file ubuntu-22.04.5-live-server-amd64.iso should be placed in `VMs\setup` the directory that is used to initialize all virtual machines. This ensures consistent OS-level behavior across benchmarking runs, supporting reproducible container/VM workflows.
-  > Download here: [Ubuntu 22.04.5 ISO](https://releases.ubuntu.com/22.04/)
-- **Alternative ISO** If using a different ISO, update its name in `vm-client.sh`, `vm-model.sh`, and `vm-server.sh` present in the folder `VMs\setup`.
-
-- **Sanity Check** Please ensure the following scripts are present in the cloned folder `VMs\setup`:
-   `setup.sh`,  `vm-client.sh`, `vm-model.sh`, `vm-server.sh`, `vm_setup_file_transfer.sh`, `setup_client.sh`, `setup_model.sh`
+- **direct**: client sends traffic directly to server (used to establish performance baseline)
+- **model**: client routes traffic through the security model host (used to evaluate security model impact)
 
 ---
 
+## Part I. VM-Based Setup
 ## Step-by-Step VMs Setup
 We would create, connect, and configure three VMs: a client (which contains the benchmarks), a server (that receives and processes the packets), and a model that mimics a cloud infrastructure, where the model VMs host the security module, either implemented in user-space or kernel-space.
-### 1. Host Setup and VM Disk Creation
 
-Run this **once on the host**:
+### Prerequisites
 
-```bash
-./VMs/setup/setup.sh
-```
+- QEMU installed on the host
+- Ubuntu ISO (`ubuntu-22.04.5-live-server-amd64.iso`) in working directory
+  - Download: [Ubuntu 22.04.5 ISO](https://releases.ubuntu.com/22.04/)
+- If using another ISO, update its name in `vm-client.sh`, `vm-model.sh`, and `vm-server.sh`
+- Scripts required:\
+  `setup.sh`, `vm-client.sh`, `vm-model.sh`, `vm-server.sh`, `vm_setup_file_transfer.sh`, `setup_client.sh`, `setup_model.sh`
 
-This will:
-- Create the Linux bridge (`br0`)
-- Set up NAT and routing
-- Make QEMU ready to use the bridge
-- Create empty disk images (`client.qcow2`, `model.qcow2`, `server.qcow2`)
-
----
-
-### 2. Launch the VMs
-
-In three terminals or background sessions, run:
+### 1. Host Setup
 
 ```bash
-.VMs/setup/vm-client.sh
-.VMs/setup/vm-model.sh
-.VMs/setup/vm-server.sh
+./setup.sh
 ```
 
-- Each script launches the respective VM with the proper MAC address, disk image, and ISO. In case there are permission errors, please make sure that you upgrade/downgrade permissions as required.
-- Follow along with the QEMU VM setup and press continue until you set up the username and password for client, server, and model.
-### 3. Setting up the manual IP address 
-    ip addr show        
-    Output shows available interfaces and the associated bridge. (eg. ens3)
-    - #### Add IP address to file /etc/netplan/01-netcfg.yaml
-        
-        sudo nano /etc/netplan/01-netcfg.yaml     
-    
-    - #### Add the following lines to the file:
- yaml
+This creates the Linux bridge (`br0`), sets up NAT and routing, prepares QEMU networking, and creates empty disk images (`client.qcow2`, `model.qcow2`, `server.qcow2`).
+
+### 2. Launch VMs
+
+```bash
+./vm-client.sh
+./vm-model.sh
+./vm-server.sh
+```
+
+Each script launches its VM with proper MAC, disk, and ISO. During the initial boot, follow the on‑screen installation procedures to set up Ubuntu inside the VM. It is recommended to go with the default options during installation unless specific customization is needed.
+
+### 3. VM Network Configuration
+
+| VM     | MAC Address       | IP Address   | Role                |
+| ------ | ----------------- | ------------ | ------------------- |
+| Client | 52:54:00:12:34:01 | 192.168.10.4 | Traffic Generator   |
+| Model  | 52:54:00:12:34:02 | 192.168.10.3 | Security Model Host |
+| Server | 52:54:00:12:34:03 | 192.168.10.5 | Receiver            |
+
+To set static IP addresses inside each VM, configure **netplan** as below. At this stage you may need to type the following code directly into each VM console, since the VMs do not yet have an IP address to allow remote connection. The interface name may be `ens3` as shown. You can confirm the correct name by running `ip link` inside the VM; look for the primary network interface (commonly ens3 in QEMU).; adjust if your VM presents a different device name:
+
+#### 5.1 On `client` VM
+
+```bash
+sudo nano /etc/netplan/01-netcfg.yaml
+```
+
+```yaml
 network:
   version: 2
   ethernets:
@@ -79,48 +82,84 @@ network:
           via: 192.168.10.1
       nameservers:
         addresses: 8.8.8.8
-      
-         
-    - #### Save the file and apply the configurations
-        
-        sudo netplan apply
-- <b>Client:</b> 192.168.10.4  
-- <b>Server:</b> 192.168.10.5  
-- <b>Firewall:</b> 192.168.10.3
-The script configures the following MAC addresses and IP addresses during the setup of the QEMU GUI.
+```
 
-| VM     | MAC Address         | IP Address     | Role              |
-|--------|---------------------|----------------|-------------------|
-| Client | 52:54:00:12:34:01   | 192.168.10.4   | Traffic Generator |
-| Model  | 52:54:00:12:34:02   | 192.168.10.3   | Security Module   |
-| Server | 52:54:00:12:34:03   | 192.168.10.5   | Receiver          |
+```bash
+sudo netplan apply
+```
 
 ---
-**Additional Debugging Tips**
-- If the system freezes due to high memory utilization, then restart your computer and rerun the scripts `setup.sh`, `vm-client.sh`, `vm-model.sh`, `vm-server.sh` 
-  It will restart from the last VM snapshots.
-- If the mouse cursor gets stuck with a QEMU window, try `Ctrl + Alt + G` or `Ctrl + Alt + Shift` to release it.
-### 4. Transfer Setup Scripts to VMs
 
-From the host, run:
+#### 5.2 On `model` VM
+
+```bash
+sudo nano /etc/netplan/01-netcfg.yaml
+```
+
+```yaml
+network:
+  version: 2
+  ethernets:
+    ens3:
+      dhcp4: no
+      addresses: 192.168.10.3/24
+      routes:
+        - to: default
+          via: 192.168.10.1
+      nameservers:
+        addresses: 8.8.8.8
+```
+
+```bash
+sudo netplan apply
+```
+
+---
+
+#### 5.3 On `server` VM
+
+```bash
+sudo nano /etc/netplan/01-netcfg.yaml
+```
+
+```yaml
+network:
+  version: 2
+  ethernets:
+    ens3:
+      dhcp4: no
+      addresses: 192.168.10.5/24
+      routes:
+        - to: default
+          via: 192.168.10.1
+      nameservers:
+        addresses: 8.8.8.8
+```
+
+```bash
+sudo netplan apply
+```
+
+> These static configurations ensure each VM is reachable at the fixed IPs shown in the table above.
+
+###
+
+### 4. Transfer Setup Scripts
 
 ```bash
 ./vm_setup_file_transfer.sh
 ```
 
->  To SSH into any VM, install OpenSSH Server **inside the VM**:
+> To enable SSH into VMs, install OpenSSH Server inside each VM (see [Ubuntu documentation](https://documentation.ubuntu.com/server/how-to/security/openssh-server/index.html) for details):
 >
 > ```bash
 > sudo apt install openssh-server
 > ```
 
----
+### 5. Run Setup Inside VMs
 
-### 5. Run Setup Inside Each VM
+- Client:
 
-SSH into each VM (or use QEMU terminal) and execute the appropriate script:
-
-- **Client VM**:
   ```bash
   ./setup_client.sh <direct|model>
   ```
@@ -128,265 +167,120 @@ SSH into each VM (or use QEMU terminal) and execute the appropriate script:
   - Use `model` if traffic should go through the firewall (model VM).
   -  Run ``` sudo apt-get install iperf3 netperf nuttcp redis-tools sysbench mysql-client fio traceroute ``` to install all the benchmarks.
 
-- **Model VM (Firewall)**:
+  **direct**: client sends traffic straight to server (used to establish performance baseline).\
+  **model**: client routes traffic through the security model host (used to evaluate security model impact).
+
+- Model:
+
   ```bash
   ./setup_model.sh
   ```
 
-- **Server VM**:
-  No additional setup needed (SSH is optional for remote access).
+- Server:&#x20;
 
-These scripts configure:
-- Static IP and gateway via netplan
-- ARP redirection from client to model
-- IP forwarding and firewall rules in the model
-- Benchmark tools installation (iperf3, fio, etc.)
-
-Each step prints messages with `echo` so you can verify progress.
-
-##  Security Model: Deployment and Evaluation
-
-###  1. Deploying the Security Model
-
-####  A. Source Code Location
-
-In the **Model (Firewall) VM**, the security model lives in:
-
-```
-~/VirtShield/
-├── kernel_space.c
-├── user_space_model.c
-├── packet_queue.c/h
-├── Makefile
-└── performance/
-```
-
-#### 🔧 B. Modifying the Model
-
-- **Kernel-space model**: edit `kernel_space.c`
-- **User-space model**: edit `user_space_model.c` and `packet_queue.c/h`
-
-#### ⚖ C. Building the Model
-
-```bash
-cd ~/VirtShield
-make
-```
-
-Builds:
-- `kernel_space.ko`
-- `user_space_model`
-
-####  D. Running the Model
-
-From **Client VM**:
-```bash
-./setup_client.sh model
-```
-
-Then in **Model VM**:
-
-- **Kernel-space**:
-  ```bash
-  sudo insmod kernel_space.ko
   ```
-- **User-space**:
-  ```bash
-  sudo ./user_space_model
+  ./setup_server.sh
   ```
 
-To unload kernel module:
+### 6. Deploy Security Model
+
+- Source code in `~/VirtShield/`:\
+  `kernel_space.c`, `user_space_model.c`, `packet_queue.c/h`, `Makefile`, `performance/`
+- Build:
+  ```bash
+  cd ~/VirtShield
+  make
+  ```
+  Builds `kernel_space.ko` and `user_space_model`.
+- Run:
+  ```bash
+  sudo insmod kernel_space.ko     # kernel-space
+  ./user_space_model              # user-space
+  ```
+- Unload kernel module:
+  ```bash
+  sudo rmmod kernel_space
+  ```
+
+### 7. Performance Measurement
+
+- **Network Performance (Client VM)**:
+  ```bash
+  ./run_test.sh
+  ```
+- **Microarchitectural Profiling (Model VM)**:
+  ```bash
+  cd ~/VirtShield/performance
+  sudo ./run_perf.sh <logdir> <mode>
+  # mode: 0 = user-space, 1 = kernel-space
+  ```
+
+### 8. Logs and Debugging
+
+| Component       | Command/File                             |   |
+| --------------- | ---------------------------------------- | - |
+| Kernel logs     | `dmesg`, \`sudo journalctl -k\`          |   |
+| User-space logs | redirect stdout from binary              |   |
+| Perf outputs    | `perf_kernel.log`, `perf_user_space.log` |   |
+| Perf raw data   | `perf_kernel.data` + `perf report`       |   |
+
+### 9. Troubleshooting: No Internet in VMs
+
+If VMs can ping `192.168.10.1` but not the internet, first check whether this is caused by `firewalld` blocking forwarding rules. You can check with:
+
 ```bash
-sudo rmmod kernel_space
+sudo firewall-cmd --state
 ```
 
----
-
-##  2. Measuring Performance
-
-VirtShield measures two performance dimensions:
-
-###  A. Network Performance (Client VM)
-
-####  Where:
-```bash
-ssh client
-```
-
-#### ⚖ Run benchmark:
-```bash
-cd ~/VirtShield
-./run_test.sh
-```
-
-Measures:
-- **Latency**
-- **Throughput**
-
-Tools used: `iperf3`, `netperf`, `nuttcp`
-
->  Results saved for both `direct` and `model` modes.
-
----
-
-###  B. Microarchitectural Profiling (Model VM)
-
-####  Where:
-```bash
-ssh model
-cd ~/VirtShield/performance
-```
-
-####  Run perf profiling:
-```bash
-sudo ./run_perf.sh <logdir> <mode>
-# mode: 0 = user-space, 1 = kernel-space
-```
-
-**What it does:**
-
-- **Kernel-space (`mode=1`)**:
-  - Records system-wide events for 10 seconds
-  - Uses `perf record` + `perf report --dsos=kernel_space.ko`
-  - Logs:
-    - `<logdir>/perf_kernel.log`
-    - `<logdir>/perf_kernel.data`
-
-- **User-space (`mode=0`)**:
-  - Runs `user_space_model` under `perf stat`
-  - Logs:
-    - `<logdir>/perf_user_space.log`
-
----
-
-##  3. Logs and Debugging
-
-| Component        | Command or File                                   |
-|------------------|----------------------------------------------------|
-| Kernel logs      | `dmesg`, `sudo journalctl -k | grep VirtShield`   |
-| User-space logs  | Run binary with `> user_log.txt`                  |
-| Perf outputs     | `perf_kernel.log`, `perf_user_space.log`          |
-| Perf raw data    | `perf_kernel.data` + `perf report`                |
-
----
-
-##  Troubleshooting: No Internet in VMs
-
-If a VM can **ping 192.168.10.1** but **not the internet**:
-
-###  Symptoms:
-- `ping 8.8.8.8` fails
-- Internal ping works
-- `tcpdump` on host shows outgoing packets
-- No `conntrack` entries
-- ICMP unreachable (admin prohibited)
-
-###  Fix:
+If it shows `running`, continue with the fix below. If not, your issue is elsewhere:
 
 ```bash
 sudo firewall-cmd --permanent --zone=trusted --add-interface=br0
+sudo firewall-cmd --reload
 sudo firewall-cmd --zone=trusted --permanent --add-masquerade
 sudo firewall-cmd --reload
 sudo sysctl -w net.ipv4.ip_forward=1
 ```
 
-Then test again:
-```bash
-ping 8.8.8.8
-```
-
 ---
 
-You're now ready to run VirtShield with or without the security model, and compare performance across modes using both network benchmarks and CPU-level instrumentation.
+## Part II. Container-Based Setup
 
+# VirtShield Container Setup Guide
 
-
-# VirtShield Docker Setup Guide
-
-This guide walks you through the **Docker-based setup** for the VirtShield platform. It mirrors the VM-based setup but uses lightweight containers to emulate the client, server, and firewall environments.
+This guide walks you through the **Container-based setup** for the VirtShield platform. It mirrors the VM-based setup but uses lightweight containers to emulate the client, server, and firewall environments.
 
 ---
+### Prerequisites
 
-##  Prerequisites
-
-- Docker installed and accessible without sudo (or use `sudo` with every command)
+- Container runtime (for this repo, we rely on **Docker**)
 - Working directory: `VirtShield/`
-- All necessary scripts and Dockerfiles placed correctly
+- All setup scripts and Dockerfiles present
 
----
-
-##  Step-by-Step Setup
-
-### 1. Launch Docker-Based Topology
-
-Navigate to the `setup/` directory and run:
+### 1. Launch Topology
 
 ```bash
 cd setup
 ./setup_containers.sh <direct|model>
 ```
 
-Where:
-- `direct` mode: Client sends traffic directly to the server
-- `model` mode: Client routes traffic to the model (firewall) container, which forwards it to the server
+**Container Network Configuration**
 
----
+| Container | IP (client-net) | IP (server-net) | Role                |
+| --------- | --------------- | --------------- | ------------------- |
+| Client    | 192.168.1.3     | 192.168.2.4\*   | Traffic Generator   |
+| Model     | 192.168.1.2     | 192.168.2.2     | Security Model Host |
+| Server    | -               | 192.168.2.3     | Receiver            |
 
-### 2. Container IP Configuration
+&#x20;\*\*What Happens in \*\*`` `setup_containers.sh ``\`
 
-| Container | IP (client-net) | IP (server-net) | Role              |
-|-----------|------------------|------------------|-------------------|
-| Client    | 192.168.1.3      | 192.168.2.4*     | Traffic Generator |
-| Model     | 192.168.1.2      | 192.168.2.2      | Firewall          |
-| Server    | -                | 192.168.2.3      | Receiver          |
-
-> In `direct` mode, the client is additionally connected to `server-net` with IP `192.168.2.4` to reach the server directly.
-
----
-
-### 3. What Happens in `setup_containers.sh`
-
-- Creates two Docker networks:
-  - `client-net` (192.168.1.0/24)
-  - `server-net` (192.168.2.0/24)
-
-- Builds Docker images for `client`, `server`, and `model` from respective Dockerfiles
-
+- Creates two networks (`client-net`, `server-net`)
+- Builds images for client, model, server
 - Launches containers with fixed IPs
+- Configures routing in model mode via IP forwarding and `iptables`
+- File Copy into Containers
 
-- **In `model` mode**:
-  - Client talks to `192.168.2.3` via `192.168.1.2` (model)
-  - Model container performs IP forwarding and NAT with `iptables`
-  - Route added in client: `ip route add 192.168.2.3 via 192.168.1.2`
-
-- **In `direct` mode**:
-  - Client is also connected to `server-net`
-  - Talks directly to `192.168.2.3` (server)
-
----
-
-### 4. File Copy: What Goes Where
-
-To avoid unnecessary clutter, only essential files are copied.
-
-####  Client Container:
-- `performance/configs/`
-- `performance/env.container.sh`
-- `performance/module/`
-- `performance/common/`
-- `performance/net/`
-- `performance/run_tcp_dump.sh`
-- `performance/run_iperf`
-- `performance/run_ping`
-
-####  Model Container:
-- `performance/system/`
-- `performance/run_perf.sh`
-- `performance/run_pidstat.sh`
-
----
-
-### 5. What the User Should Modify Inside Containers
+### 2. Modify and Deploy Security Model
 
 Once the containers are up and required files are copied in, the user is expected to:
 
@@ -394,116 +288,57 @@ Once the containers are up and required files are copied in, the user is expecte
 - Modify the required C source files to implement their own security logic
   - For example: `kernel_space.c`, `user_space_model.c`, `packet_queue.c`, etc.
 
-After modifying the files:
+After modifying the files, inside the model container:
 
-1. Run `make` inside the workspace directory to compile:
-   ```bash
-   cd /root/performance/workspace
-   make
-   ```
-
-2. Depending on which model you use, deploy it manually:
-   - Kernel-space:
-     ```bash
-     sudo insmod kernel_space.ko
-     ```
-   - User-space:
-     ```bash
-     sudo nohup ./user_space_model &
-     ```
-
->  Repeat the edit → compile → deploy cycle as needed.
-
----
-
-##  Security Model: Deployment & Execution
-
-### A. Location
-
-Inside the **model** container:
-```
-/root/performance/workspace/
-├── kernel_space.ko
-├── user_space_model
-
-These files are created during the `make` process and represent the compiled security model:
-- `kernel_space.ko` is the kernel module to be inserted using `insmod`
-- `user_space_model` is the user-space executable
-
-As a user, your primary task is to **modify the source files** (such as `kernel_space.c`, `user_space_model.c`, or `packet_queue.c`) located in the corresponding workspace source directory. After modifying the code, rerun `make` inside the container to generate the updated `.ko` or binary files, and re-insert or restart the appropriate model implementation.
-
-This is where you implement your actual firewall/security logic.
-```
-
-### B. Running the Model
-
-Then in **model container**:
-- Kernel-space:
 ```bash
-sudo insmod /root/workspace/kernel_space.ko
-```
-- User-space:
-```bash
-sudo nohup /root/workspace/user_space_model &
+cd /root/performance/workspace
+make
 ```
 
-To unload kernel module:
+This produces `kernel_space.ko` and `user_space_model`.
+
+Run:
+
+```bash
+sudo insmod kernel_space.ko      # kernel-space
+./user_space_model &             # user-space
+```
+
+Unload kernel module:
+
 ```bash
 sudo rmmod kernel_space
 ```
 
----
+### 3. Performance Measurement
 
-##  Measuring Performance
+- **Client container (network metrics)**:
+  ```bash
+  ./run_test.sh
+  ```
+- **Model container (microarchitectural profiling)**:
+  ```bash
+  cd /root/performance
+  sudo ./run_perf.sh <logdir>
+  ```
 
-### A. Network Benchmarks (Client)
-Run tools like:
-```bash
-./run_test.sh
-```
-These compare network metrics in `direct` vs `model` mode.
+### 4. Logs and Debugging
 
-### B. Microarchitectural Profiling (Model)
-```bash
-cd /root/performance
-sudo ./run_perf.sh <logdir> <mode>
-# mode: 0 = user-space, 1 = kernel-space
-```
-
-Outputs:
-- `perf_kernel.log`, `perf_kernel.data`
-- `perf_user_space.log`
+| Component        | Command/Path                |
+| ---------------- | --------------------------- |
+| Kernel logs      | `dmesg`, `journalctl -k`    |
+| User logs        | redirect stdout from binary |
+| Performance logs | `/root/performance/*.log`   |
 
 ---
 
-##  Logs and Debugging
+## Summary
 
-| Component        | Location or Tool                          |
-|------------------|-------------------------------------------|
-| Kernel logs      | `dmesg`, `journalctl -k`                  |
-| User logs        | Redirect stdout from model binary         |
-| Performance logs | `/root/performance/*.log`                 |
+VirtShield provides a unified framework to **develop, deploy, and evaluate security models** in both VM and container environments.\
+The workflow is consistent:
 
----
-
-##  Benchmark Tools
-
-Install these inside **client** and **server** containers (already handled in Dockerfiles):
-
-- `iperf3`, `netperf`, `nuttcp`, `fio`, `mysql-client`, `redis-tools`, `sysbench`, `traceroute`
-- `mysql-server`, `redis-server` on server container
-
----
-
-##  Testing Checklist
-
-- [ ] Containers up and running: `docker ps`
-- [ ] Client can ping server (`ping 192.168.2.3`)
-- [ ] Model forwards packets (`iptables -L` shows forwarding rules)
-- [ ] Kernel/user-space model loaded
-- [ ] `perf` logs collected
-
----
-
-You're now ready to test, modify, and evaluate your firewall security model in a lightweight Docker environment. For VM-based setup, please take a look at the [VirtShield VM Setup Guide](vm_setup_README.md).
+1. Modify provided C source files (`kernel_space.c`, `user_space_model.c`, `packet_queue.c`)
+2. Rebuild (`make`)
+3. Deploy (insmod/run binary)
+4. Benchmark performance (network + microarchitectural)
 

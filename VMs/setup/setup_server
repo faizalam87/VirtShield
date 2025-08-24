@@ -1,0 +1,6 @@
+#!/bin/bash
+# setup_server.sh for Server Container
+
+# Start iperf3 server in background
+echo "[+] Starting iperf3 server..."
+nohup iperf3 -s

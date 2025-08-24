@@ -11,6 +11,9 @@ CLIENT_VM_IP="192.168.10.4"
 MODEL_VM_USER="model"
 MODEL_VM_IP="192.168.10.3"
 
+SERVER_VM_USER="server"
+SERVER_VM_IP="192.168.10.5"
+
 # Copy setup scripts
 echo "Copying setup script to Client VM..."
 scp -r ../../performance setup_client.sh ../tests $CLIENT_VM_USER@$CLIENT_VM_IP:/home/$CLIENT_VM_USER
@@ -29,6 +32,8 @@ echo "Example commands:"
 echo "  ssh $CLIENT_VM_USER@$CLIENT_VM_IP  and ./setup_client.sh <direct/model>"
 echo "  ssh $MODEL_VM_USER@$MODEL_VM_IP  and ./setup_model.sh"
 
+
+scp -r setup_server.sh $SERVER_VM_USER@$SERVER_VM_IP:/home/$SERVER_VM_USER
 
 
 echo "Make sure to run these scripts with appropriate execute permissions."
