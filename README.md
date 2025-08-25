@@ -62,7 +62,7 @@ Each script launches its VM with proper MAC, disk, and ISO. During the initial b
 | Model  | 52:54:00:12:34:02 | 192.168.10.3 | Security Model Host |
 | Server | 52:54:00:12:34:03 | 192.168.10.5 | Receiver            |
 
-To set static IP addresses inside each VM, configure **netplan** as below. At this stage you may need to type the following code directly into each VM console, since the VMs do not yet have an IP address to allow remote connection. The interface name may be `ens3` as shown. You can confirm the correct name by running `ip link` inside the VM; look for the primary network interface (commonly ens3 in QEMU).; adjust if your VM presents a different device name:
+To set static IP addresses inside each VM, configure **netplan** as below. At this stage, you may need to type the following code directly into each VM console, since the VMs do not yet have an IP address to allow remote connection. The interface name may be `ens3` as shown. You can confirm the correct name by running `ip link` inside the VM; look for the primary network interface (commonly ens3 in QEMU).; adjust if your VM presents a different device name:
 
 #### 5.1 On `client` VM
 
@@ -216,7 +216,7 @@ sudo netplan apply
   ```
 **Manually Running the Benchmarks**
 The Benchmarks folder contains a shell script to run each benchmark manually. Move them to the client VM and launch the benchmark individually.
-NOTE: The results and result_summary are the result traces generated from our individual runs for the data presented in the paper. Please note that this would vary significantly based on the type of security model used.
+> NOTE: The results and result_summary are the result traces generated from our individual runs for the data presented in the paper. Please note that this would vary significantly based on the type of security model used.
 
 ### 8. Logs and Debugging
 
@@ -285,7 +285,7 @@ cd setup
 
 ### 2. Modify and Deploy Security Model
 
-Once the containers are up and required files are copied in, the user is expected to:
+Once the containers are up and the required files are copied in, the user is expected to:
 
 - Navigate to `/root/performance/workspace/` inside the model container
 - Modify the required C source files to implement their own security logic
