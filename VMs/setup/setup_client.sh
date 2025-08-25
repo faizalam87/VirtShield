@@ -36,4 +36,4 @@ arp -n | grep $SERVER_IP
 
 sudo apt install iperf3 netperf nuttcp redis-tools sysbench mysql-client fio traceroute
 
-echo "✅ Routing set deployed to client VM."
+echo " Routing set deployed to client VM."
