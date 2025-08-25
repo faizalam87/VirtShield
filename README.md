@@ -214,6 +214,9 @@ sudo netplan apply
   sudo ./run_perf.sh <logdir> <mode>
   # mode: 0 = user-space, 1 = kernel-space
   ```
+**Manually Running the Benchmarks**
+The Benchmarks folder contains a shell script to run each benchmark manually. Move them to the client VM and launch the benchmark individually.
+NOTE: The results and result_summary are the result traces generated from our individual runs for the data presented in the paper. Please note that this would vary significantly based on the type of security model used.
 
 ### 8. Logs and Debugging
 
