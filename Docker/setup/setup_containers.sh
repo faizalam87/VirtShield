@@ -50,6 +50,7 @@ docker cp -r ../../performance/configs                client:/root/performance/
 docker cp ../../performance/modules/common/run_tcpdump.sh            client:/root/performance/
 docker cp ../../performance/modules/net/run_iperf.sh              client:/root/performance/
 docker cp ../../performance/modules/net/run_ping.sh               client:/root/performance/
+docker cp ../tests/run_test.sh client:/root/performance/
 
 # Model-side performance files
 docker exec model mkdir -p /root/performance
@@ -59,4 +60,4 @@ docker cp ../../performance/modules/system/run_pidstat.sh             model:/roo
 # Server side startups
 # Start iperf3 server in background
 echo "[+] Starting iperf3 server..."
-nohup iperf3 -s &
+docker exec server iperf3 -s &

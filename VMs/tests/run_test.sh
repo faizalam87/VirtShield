@@ -24,11 +24,12 @@ echo "[2/4] Running ping"
 bash ../performance/modules/net/run_ping.sh $MODE_FLAG $LOGDIR $SERVER_IP
 
 # # System usage
-# echo "[3/4] Running pidstat"
-# bash ./modules/system/run_pidstat.sh "$MODE_FLAG" "$LOGDIR"
+echo "[3/4] Running redis"
+bash ./benchmark/run_redis.sh "$MODE_FLAG" "$LOGDIR" $SERVER_IP
 
 # echo "[4/4] Running perf stat"
 # bash ./modules/system/run_perf.sh "$MODE_FLAG" "$LOGDIR"
+
 
 # Optional: packet capture (can be disabled with flag)
 if [[ "$ENABLE_TCPDUMP" == "true" ]]; then

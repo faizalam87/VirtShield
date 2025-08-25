@@ -25,6 +25,7 @@ scp -r ../../performance setup_client.sh ../tests $CLIENT_VM_USER@$CLIENT_VM_IP:
 echo "Copying setup script to MODEL VM..."
 scp -r setup_model.sh ../../performance/modules/system $MODEL_VM_USER@$MODEL_VM_IP:/home/$MODEL_VM_USER
 
+scp -r ../tests $CLIENT_VM_USER@$CLIENT_VM_IP:/home/$CLIENT_VM_USER
 
 echo "Setup scripts copied to corresponding VM's home directories."
 echo "You can now SSH into each VM and run the setup scripts to configure them."
