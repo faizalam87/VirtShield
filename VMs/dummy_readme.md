@@ -5,7 +5,7 @@ This guide walks you through setting up the QEMU-based VM environment for evalua
 
 ---
 
-## ✅ Step 1: Prerequisites
+##  Step 1: Prerequisites
 
 Make sure the following packages are installed:
 
@@ -18,7 +18,7 @@ Ensure you have an Ubuntu ISO (e.g., `ubuntu.iso`) placed in your project/VMs di
 
 ---
 
-## ✅ Step 2: Setup Networking (Run Once)
+##  Step 2: Setup Networking (Run Once)
 
 This script sets up the bridge network (`br0`) and enables NAT to allow VM internet access.
 
@@ -28,7 +28,7 @@ This script sets up the bridge network (`br0`) and enables NAT to allow VM inter
 
 ---
 
-## ✅ Step 3: Create VM Disk Images
+##  Step 3: Create VM Disk Images
 
 This script will create 10G disk images for the three VMs.
 
@@ -38,7 +38,7 @@ This script will create 10G disk images for the three VMs.
 
 ---
 
-## ✅ Step 4: Launch the VMs
+##  Step 4: Launch the VMs
 
 Each script launches one VM using the `ubuntu.iso` to install Ubuntu Server.
 
@@ -52,7 +52,7 @@ Follow the on-screen instructions to complete Ubuntu installation in each VM. Us
 
 ---
 
-## ✅ Step 5: Configure Static IPs Inside Each VM
+## Step 5: Configure Static IPs Inside Each VM
 
 After installation, log into each VM and configure networking manually:
 
@@ -68,7 +68,7 @@ Usually, it will be `ens3`.
 
 ---
 
-### 📦 5.1 On `client` VM
+###  5.1 On `client` VM
 
 ```bash
 sudo nano /etc/netplan/01-netcfg.yaml
@@ -94,7 +94,7 @@ sudo netplan apply
 
 ---
 
-### 🔥 5.2 On `firewall` VM
+###  5.2 On `firewall` VM
 
 ```bash
 sudo nano /etc/netplan/01-netcfg.yaml
@@ -121,7 +121,7 @@ sudo sysctl -w net.ipv4.ip_forward=1
 
 ---
 
-### 📦 5.3 On `server` VM
+###  5.3 On `server` VM
 
 ```bash
 sudo nano /etc/netplan/01-netcfg.yaml
@@ -168,7 +168,7 @@ sudo iptables -A FORWARD -s 192.168.10.4 -d 192.168.10.5 -j ACCEPT
 
 ---
 
-## ✅ Step 6: Install Benchmark Tools
+##  Step 6: Install Benchmark Tools
 
 Install the required benchmark packages inside the VMs.
 
@@ -196,7 +196,7 @@ sudo service redis-server restart
 
 ---
 
-## 🔄 Copy Files Between Host and VMs
+##  Copy Files Between Host and VMs
 
 ### Install SSH Server inside VMs:
 ```bash
@@ -215,6 +215,6 @@ scp username@192.168.10.4:/home/username/file.txt .
 
 ---
 
-## ✅ You're Ready!
+##  You're Ready!
 
 Your QEMU-based VirtShield setup is now ready for experiments. Launch benchmarking tools like `iperf3`, `netperf`, or `nuttcp` between client and server to evaluate firewall performance.
