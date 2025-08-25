@@ -4,7 +4,7 @@ This guide walks you through the **Docker-based setup** for the VirtShield platf
 
 ---
 
-## ✅ Prerequisites
+##  Prerequisites
 
 - Docker installed and accessible without sudo (or use `sudo` with every command)
 - Working directory: `VirtShield/`
@@ -12,7 +12,7 @@ This guide walks you through the **Docker-based setup** for the VirtShield platf
 
 ---
 
-## 🛠️ Step-by-Step Setup
+##  Step-by-Step Setup
 
 ### 1. Launch Docker-Based Topology
 
@@ -66,7 +66,7 @@ Where:
 
 To avoid unnecessary clutter, only essential files are copied.
 
-#### 📦 Client Container:
+####  Client Container:
 - `performance/configs/`
 - `performance/env.container.sh`
 - `performance/module/`
@@ -76,7 +76,7 @@ To avoid unnecessary clutter, only essential files are copied.
 - `performance/run_iperf`
 - `performance/run_ping`
 
-#### 🔒 Model Container:
+####  Model Container:
 - `performance/system/`
 - `performance/run_perf.sh`
 - `performance/run_pidstat.sh`
@@ -109,11 +109,11 @@ After modifying the files:
      sudo nohup ./user_space_model &
      ```
 
-> 🔁 Repeat the edit → compile → deploy cycle as needed.
+>  Repeat the edit → compile → deploy cycle as needed.
 
 ---
 
-## 🚀 Security Model: Deployment & Execution
+##  Security Model: Deployment & Execution
 
 ### A. Location
 
@@ -151,7 +151,7 @@ sudo rmmod kernel_space
 
 ---
 
-## 📈 Measuring Performance
+##  Measuring Performance
 
 ### A. Network Benchmarks (Client)
 Run tools like:
@@ -173,7 +173,7 @@ Outputs:
 
 ---
 
-## 📁 Logs and Debugging
+##  Logs and Debugging
 
 | Component        | Location or Tool                          |
 |------------------|-------------------------------------------|
@@ -183,7 +183,7 @@ Outputs:
 
 ---
 
-## 📌 Benchmark Tools
+##  Benchmark Tools
 
 Install these inside **client** and **server** containers (already handled in Dockerfiles):
 
@@ -192,7 +192,7 @@ Install these inside **client** and **server** containers (already handled in Do
 
 ---
 
-## 🧪 Testing Checklist
+##  Testing Checklist
 
 - [ ] Containers up and running: `docker ps`
 - [ ] Client can ping server (`ping 192.168.2.3`)
