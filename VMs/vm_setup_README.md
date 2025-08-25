@@ -64,7 +64,7 @@ From the host, run:
 ./vm_setup_file_transfer.sh
 ```
 
-> 🔐 To SSH into any VM, install OpenSSH Server **inside the VM**:
+>  To SSH into any VM, install OpenSSH Server **inside the VM**:
 >
 > ```bash
 > sudo apt install openssh-server
@@ -101,15 +101,15 @@ Each step prints messages with `echo` so you can verify progress.
 
 ---
 
-## 🔁 Packet Flow Configuration
+##  Packet Flow Configuration
 
 Once all VMs are set up:
 
-> 🧭 **Traffic from the client is routed to the server via the model (firewall) VM** — unless `direct` mode is used, in which case the client reaches the server directly.
+>  **Traffic from the client is routed to the server via the model (firewall) VM** — unless `direct` mode is used, in which case the client reaches the server directly.
 
 ---
 
-## 📊 Benchmark Tools Installed
+##  Benchmark Tools Installed
 
 **Client/Model:**
 - `iperf3`, `netperf`, `nuttcp`, `fio`, `mysql-client`, `redis-tools`, `sysbench`, `traceroute`
@@ -119,11 +119,11 @@ Once all VMs are set up:
 
 ---
 
-## 🔐 Security Model: Deployment and Evaluation
+##  Security Model: Deployment and Evaluation
 
-### 🚀 1. Deploying the Security Model
+###  1. Deploying the Security Model
 
-#### 📉 A. Source Code Location
+####  A. Source Code Location
 
 In the **Model (Firewall) VM**, the security model lives in:
 
@@ -136,12 +136,12 @@ In the **Model (Firewall) VM**, the security model lives in:
 └── performance/
 ```
 
-#### 🔧 B. Modifying the Model
+####  B. Modifying the Model
 
 - **Kernel-space model**: edit `kernel_space.c`
 - **User-space model**: edit `user_space_model.c` and `packet_queue.c/h`
 
-#### ⚖️ C. Building the Model
+####  C. Building the Model
 
 ```bash
 cd ~/VirtShield
@@ -152,7 +152,7 @@ Builds:
 - `kernel_space.ko`
 - `user_space_model`
 
-#### 📌 D. Running the Model
+####  D. Running the Model
 
 From **Client VM**:
 ```bash
@@ -177,13 +177,13 @@ sudo rmmod kernel_space
 
 ---
 
-## 📈 2. Measuring Performance
+##  2. Measuring Performance
 
 VirtShield measures two performance dimensions:
 
-### 🚁 A. Network Performance (Client VM)
+###  A. Network Performance (Client VM)
 
-#### ✅ Where:
+####  Where:
 ```bash
 ssh client
 ```
@@ -200,19 +200,19 @@ Measures:
 
 Tools used: `iperf3`, `netperf`, `nuttcp`
 
-> 📂 Results saved for both `direct` and `model` modes.
+>  Results saved for both `direct` and `model` modes.
 
 ---
 
-### 🧠 B. Microarchitectural Profiling (Model VM)
+###  B. Microarchitectural Profiling (Model VM)
 
-#### ✅ Where:
+####  Where:
 ```bash
 ssh model
 cd ~/VirtShield/performance
 ```
 
-#### ⚖️ Run perf profiling:
+####  Run perf profiling:
 ```bash
 sudo ./run_perf.sh <logdir> <mode>
 # mode: 0 = user-space, 1 = kernel-space
@@ -234,7 +234,7 @@ sudo ./run_perf.sh <logdir> <mode>
 
 ---
 
-## 📁 3. Logs and Debugging
+##  3. Logs and Debugging
 
 | Component        | Command or File                                   |
 |------------------|----------------------------------------------------|
@@ -245,7 +245,7 @@ sudo ./run_perf.sh <logdir> <mode>
 
 ---
 
-## 🥵 Troubleshooting: No Internet in VMs
+##  Troubleshooting: No Internet in VMs
 
 If a VM can **ping 192.168.10.1** but **not the internet**:
 
@@ -256,7 +256,7 @@ If a VM can **ping 192.168.10.1** but **not the internet**:
 - No `conntrack` entries
 - ICMP unreachable (admin prohibited)
 
-### ✅ Fix:
+###  Fix:
 
 ```bash
 sudo firewall-cmd --permanent --zone=trusted --add-interface=br0
