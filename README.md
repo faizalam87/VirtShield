@@ -217,7 +217,7 @@ sudo netplan apply
   # mode: 0 = user-space, 1 = kernel-space
   ```
 ### 8. Manually running the benchmarks 
-The `Benchmarks` folder contains the scripts to run each benchmark manually. Users are encouraged to add additional benchmarks.
+The `Benchmarks` folder contains the scripts to run each benchmark manually. Users are encouraged to add additional benchmarks. The `Results` and `Results_Summary` contain results and logs for our runs of firewall and Suricata.
 ### 9. Logs and Debugging
 
 | Component       | Command/File                             |   |
