@@ -196,7 +196,7 @@ sudo netplan apply
   cd ~/VirtShield
   make
   ```
-  NOTE:- If the make fails due to the model VM not having a GCC compiler, install it using `sudo apt install -y gcc` and then make CC=gcc.
+  NOTE:- If the make fails due to the model VM not having a GCC compiler, install it using `sudo apt install -y gcc` and then `make CC=gcc`.
 
 
   Builds `kernel_space.ko` and `user_space_model[packet_sniffer]`.
