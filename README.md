@@ -183,19 +183,22 @@ sudo netplan apply
 
   ```
   ./setup_server.sh
+  ```
 
-  
-```
 
 ### 6. Deploy Security Model
 
 - Source code in `~/VirtShield/`:\
   `kernel_space.c`, `user_space_model.c`, `packet_queue.c/h`, `Makefile`, `performance/`
+- run ` ./setup/model_file_transfer.sh `. It would transfer all required files to build the user-space or kernel-space security module to the Model VM.
 - Build:
   ```bash
   cd ~/VirtShield
   make
   ```
+  NOTE:- If the make fails due to the model VM not having a GCC compiler, install it using `sudo apt install -y gcc` and then make CC=gcc.
+
+
   Builds `kernel_space.ko` and `user_space_model[packet_sniffer]`.
 - Run:
   ```bash
