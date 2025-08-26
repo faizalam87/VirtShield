@@ -181,9 +181,9 @@ sudo netplan apply
   ```
   ./setup_server.sh
 
-  <img width="3729" height="1092" alt="VirtShield" src="https://github.com/user-attachments/assets/be076f93-0448-4daf-bc49-3834d249623b" />
+  
 ```
-
+<img width="3729" height="1092" alt="VirtShield" src="https://github.com/user-attachments/assets/be076f93-0448-4daf-bc49-3834d249623b" />
 ### 6. Deploy Security Model
 
 - Source code in `~/VirtShield/`:\
