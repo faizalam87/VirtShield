@@ -193,11 +193,11 @@ sudo netplan apply
   cd ~/VirtShield
   make
   ```
-  Builds `kernel_space.ko` and `user_space_model`.
+  Builds `kernel_space.ko` and `user_space_model[packet_sniffer]`.
 - Run:
   ```bash
   sudo insmod kernel_space.ko     # kernel-space
-  ./user_space_model              # user-space
+  ./user_space_model              # user-space[packet_sniffer]
   ```
 - Unload kernel module:
   ```bash
