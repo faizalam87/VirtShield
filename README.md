@@ -284,7 +284,7 @@ cd setup
 
 ### 2. Modify and Deploy Security Model
 
-Once the containers are up and required files are copied in, the user is expected to:
+Once the containers are up and the required files are copied in, the user is expected to:
 
 - Navigate to `/root/performance/workspace/` inside the model container
 - Modify the required C source files to implement their own security logic
@@ -297,7 +297,7 @@ cd /root/performance/workspace
 make
 ```
 
-This produces `kernel_space.ko` and `user_space_model`.
+This produces `kernel_space.ko` and `user_space_model[packet_sniffer]`.
 
 Run:
 
