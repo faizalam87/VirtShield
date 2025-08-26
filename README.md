@@ -142,7 +142,9 @@ sudo netplan apply
 
 > These static configurations ensure each VM is reachable at the fixed IPs shown in the table above.
 
-###
+
+###<img width="3729" height="1623" alt="VirtShield" src="https://github.com/user-attachments/assets/7cb7eeeb-5e97-46fc-a4e5-26ac3e9f9950" />
+
 
 ### 4. Transfer Setup Scripts
 
