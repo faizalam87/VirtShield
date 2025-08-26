@@ -156,6 +156,9 @@ sudo netplan apply
 > sudo apt install openssh-server
 > ```
 
+
+<img width="3729" height="1092" alt="VirtShield" src="https://github.com/user-attachments/assets/be076f93-0448-4daf-bc49-3834d249623b" />
+
 ### 5. Run Setup Inside VMs
 
 - Client:
@@ -183,7 +186,7 @@ sudo netplan apply
 
   
 ```
-<img width="3729" height="1092" alt="VirtShield" src="https://github.com/user-attachments/assets/be076f93-0448-4daf-bc49-3834d249623b" />
+
 ### 6. Deploy Security Model
 
 - Source code in `~/VirtShield/`:\
